@@ -23,11 +23,11 @@ class SpeechService {
   final AudioRecorder _audioRecorder = AudioRecorder();
 
   // StreamController to emit errors
-  final StreamController<Exception> _errorController =
+  final StreamController<Exception> errorController =
       StreamController<Exception>.broadcast();
 
 // Expose the error stream
-  Stream<Exception> get errorStream => _errorController.stream;
+  Stream<Exception> get errorStream => errorController.stream;
 
   late void Function(double) onSoundLevelChange;
   late void Function(String) onTranscription;
@@ -266,13 +266,13 @@ class SpeechService {
   void dispose() {
     _stopDeepgramListening();
     _speechToText.stop();
-    _errorController.close();
+    errorController.close();
   }
 
   // Centralized error handling
   void _handleError(Exception e) {
-    if (!_errorController.isClosed) {
-      _errorController.add(e);
+    if (!errorController.isClosed) {
+      errorController.add(e);
     }
     debugPrint('Error in SpeechService: $e');
   }
