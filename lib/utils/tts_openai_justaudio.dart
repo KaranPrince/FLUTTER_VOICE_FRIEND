@@ -24,7 +24,8 @@ class TextToSpeechOpenAI implements tts_interface.TextToSpeechOpenAI {
 
   // Queues for managing text and audio
   final Queue<String> _queue = Queue<String>();
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer;
+  final http.Client _httpClient;
   final Queue<Future<Uint8List?>> _audioBuffer = Queue<Future<Uint8List?>>();
   final Queue<String> _textBuffer = Queue<String>();
 
@@ -56,7 +57,12 @@ class TextToSpeechOpenAI implements tts_interface.TextToSpeechOpenAI {
   @override
   Stream<Exception> get errorStream => _errorController.stream;
 
-  TextToSpeechOpenAI(this._voice) {
+  TextToSpeechOpenAI(
+    this._voice, {
+    AudioPlayer? audioPlayer,
+    http.Client? httpClient,
+  })  : _audioPlayer = audioPlayer ?? AudioPlayer(),
+        _httpClient = httpClient ?? http.Client() {
     _audioPlayer.setVolume(1.0);
     _audioPlayer.setLoopMode(LoopMode.off);
     _audioPlayer.setSpeed(_voiceSpeed);
@@ -89,6 +95,7 @@ class TextToSpeechOpenAI implements tts_interface.TextToSpeechOpenAI {
       _audioIntensityTimer?.cancel();
       _audioPlayer.dispose();
       _errorController.close();
+      _httpClient.close();
     } catch (e) {
       debugPrint('Error during dispose: $e');
     }
@@ -141,6 +148,10 @@ class TextToSpeechOpenAI implements tts_interface.TextToSpeechOpenAI {
 
   @override
   Future<void> playTextToSpeech(String text) async {
+    if (text.trim().isEmpty) {
+      debugPrint("Empty text provided. Ignoring.");
+      return;
+    }
     _queue.add(text);
     _processQueue(maxCharacters: _maxCharacters);
   }
@@ -234,7 +245,7 @@ class TextToSpeechOpenAI implements tts_interface.TextToSpeechOpenAI {
 
   Future<Uint8List?> _synthesizeAudio(String text) async {
     try {
-      final response = await http.post(
+      final response = await _httpClient.post(
         Uri.parse(Config.openaiTtsUrl),
         headers: {
           'Authorization': 'Bearer ${Config.openaiApiKey}',
