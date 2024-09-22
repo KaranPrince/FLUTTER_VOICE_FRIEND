@@ -1,3 +1,5 @@
+// lib/llm_chain.dart
+
 import 'package:flutter/material.dart';
 import 'package:langchain/langchain.dart';
 import 'package:langchain_openai/langchain_openai.dart';
@@ -15,31 +17,61 @@ class LLMChainLibrary {
   late ConversationChain llmChain;
   String template;
 
-  LLMChainLibrary(this.template) {
-    _initializeComponents(template);
+  // Constructor with optional parameters for dependency injection
+  LLMChainLibrary(
+    this.template, {
+    ConversationBufferWindowMemory? memory,
+    PromptTemplate? promptTemplate,
+    PromptTemplate? memoryUserSummaryTemplate,
+    PromptTemplate? memorySessionSummaryTemplate,
+    PromptTemplate? memoryAllSessionSummaryTemplate,
+    ChatOpenAI? llm,
+    ConversationChain? llmChain,
+  }) {
+    _initializeComponents(
+      template,
+      memory: memory,
+      promptTemplate: promptTemplate,
+      memoryUserSummaryTemplate: memoryUserSummaryTemplate,
+      memorySessionSummaryTemplate: memorySessionSummaryTemplate,
+      llm: llm,
+      llmChain: llmChain,
+    );
   }
 
-  void _initializeComponents(String template) {
-    memory = ConversationBufferWindowMemory(
-      k: 15,
-      memoryKey: "chat_history",
-      aiPrefix: "AI",
-      returnMessages: true,
-    );
-    promptTemplate = PromptTemplate.fromTemplate(template);
-    memoryUserSummaryTemplate =
+  void _initializeComponents(
+    String template, {
+    ConversationBufferWindowMemory? memory,
+    PromptTemplate? promptTemplate,
+    PromptTemplate? memoryUserSummaryTemplate,
+    PromptTemplate? memorySessionSummaryTemplate,
+    ChatOpenAI? llm,
+    ConversationChain? llmChain,
+  }) {
+    this.memory = memory ??
+        ConversationBufferWindowMemory(
+          k: 15,
+          memoryKey: "chat_history",
+          aiPrefix: "AI",
+          returnMessages: true,
+        );
+    this.promptTemplate =
+        promptTemplate ?? PromptTemplate.fromTemplate(template);
+    this.memoryUserSummaryTemplate = memoryUserSummaryTemplate ??
         PromptTemplate.fromTemplate(templateSummaryUser);
-    memorySessionSummaryTemplate =
+    this.memorySessionSummaryTemplate = memorySessionSummaryTemplate ??
         PromptTemplate.fromTemplate(templateSummarySession);
-    llm = ChatOpenAI(
-      apiKey: Config.openaiApiKey,
-      defaultOptions: const ChatOpenAIOptions(model: 'gpt-4o-mini'),
-    );
-    llmChain = ConversationChain(
-      llm: llm,
-      memory: memory,
-      prompt: promptTemplate,
-    );
+    this.llm = llm ??
+        ChatOpenAI(
+          apiKey: Config.openaiApiKey,
+          defaultOptions: const ChatOpenAIOptions(model: 'gpt-4o-mini'),
+        );
+    this.llmChain = llmChain ??
+        ConversationChain(
+          llm: this.llm,
+          memory: this.memory,
+          prompt: this.promptTemplate,
+        );
   }
 
   void setTemplate(String newTemplate) {
