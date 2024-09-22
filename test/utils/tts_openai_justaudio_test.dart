@@ -74,7 +74,7 @@ void main() {
       expect(tts.isPlaying(), false);
 
       // Simulate playback starting
-      when(mockAudioPlayer.play()).thenAnswer((_) async => null);
+      when(mockAudioPlayer.play()).thenAnswer((_) async => {});
       when(mockAudioPlayer.playerStateStream).thenAnswer(
         (_) => Stream.value(PlayerState(
           false,
@@ -85,7 +85,7 @@ void main() {
       await tts.playTextToSpeech("Test");
 
       // Allow some time for processing
-      await Future.delayed(Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 100));
 
       // Since _isPlayingAudio is private, verify via isPlaying
       // After playback, it should be false
@@ -105,7 +105,7 @@ void main() {
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
-      when(mockAudioPlayer.play()).thenAnswer((_) async => null);
+      when(mockAudioPlayer.play()).thenAnswer((_) async => {});
       when(mockAudioPlayer.playerStateStream).thenAnswer(
         (_) => Stream.value(PlayerState(
           false,
@@ -116,7 +116,7 @@ void main() {
       await tts.playTextToSpeech("Hello, this is a test.");
 
       // Allow some time for processing
-      await Future.delayed(Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 100));
 
       // Verify that hasAudioToPlay is true after adding to buffer
       expect(tts.hasAudioToPlay(), true);
@@ -160,7 +160,7 @@ void main() {
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
-      when(mockAudioPlayer.play()).thenAnswer((_) async => null);
+      when(mockAudioPlayer.play()).thenAnswer((_) async => {});
       when(mockAudioPlayer.playerStateStream).thenAnswer(
         (_) => Stream.value(PlayerState(
           false,
@@ -171,7 +171,7 @@ void main() {
       await tts.playTextToSpeech("Hello, this is a test.");
 
       // Allow some time for processing
-      await Future.delayed(Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 100));
 
       expect(tts.lastAudioToPlay(), false);
     }, skip: 'TODO: Auto generated test - review failure case and fix test');
@@ -186,7 +186,7 @@ void main() {
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
-      when(mockAudioPlayer.play()).thenAnswer((_) async => null);
+      when(mockAudioPlayer.play()).thenAnswer((_) async => {});
       when(mockAudioPlayer.playerStateStream).thenAnswer(
         (_) => Stream.value(PlayerState(
           false,
@@ -197,7 +197,7 @@ void main() {
       await tts.playTextToSpeech("Hello, this is a test.");
 
       // Allow some time for processing
-      await Future.delayed(Duration(milliseconds: 200));
+      await Future.delayed(const Duration(milliseconds: 200));
 
       // Since _currentSubtitles is set if sentence length > 8
       expect(tts.getSubtitles(), "Hello, this is a test.");
@@ -221,7 +221,7 @@ void main() {
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
-      when(mockAudioPlayer.play()).thenAnswer((_) async => null);
+      when(mockAudioPlayer.play()).thenAnswer((_) async => {});
       when(mockAudioPlayer.playerStateStream).thenAnswer(
         (_) => Stream.value(PlayerState(
           false,
@@ -232,7 +232,7 @@ void main() {
       await tts.playTextToSpeech("Hello, this is a test.");
 
       // Allow some time for processing
-      await Future.delayed(Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 100));
 
       // Verify that HTTP POST was called with correct parameters
       verify(mockHttpClient.post(
@@ -264,7 +264,7 @@ void main() {
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
-      when(mockAudioPlayer.play()).thenAnswer((_) async => null);
+      when(mockAudioPlayer.play()).thenAnswer((_) async => {});
       when(mockAudioPlayer.playerStateStream).thenAnswer(
         (_) => Stream.value(PlayerState(
           false,
@@ -275,7 +275,7 @@ void main() {
       await tts.playTextToSpeech("Hello, this is a test.");
 
       // Allow some time for processing
-      await Future.delayed(Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 100));
 
       // Stop playback
       await tts.stop();
@@ -307,7 +307,7 @@ void main() {
       await tts.playTextToSpeech("This will fail");
 
       // Allow some time for processing
-      await Future.delayed(Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 100));
 
       expect(errors.length, 1);
       expect(
@@ -342,7 +342,7 @@ void main() {
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
-      when(mockAudioPlayer.play()).thenAnswer((_) async => null);
+      when(mockAudioPlayer.play()).thenAnswer((_) async => {});
       when(mockAudioPlayer.playerStateStream).thenAnswer(
         (_) => Stream.value(PlayerState(
           false,
@@ -353,7 +353,7 @@ void main() {
       await tts.playTextToSpeech(longText);
 
       // Allow some time for processing
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
 
       // Calculate expected number of segments
       int expectedSegments = (longText.length / 200).ceil();
@@ -383,7 +383,7 @@ void main() {
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
-      when(mockAudioPlayer.play()).thenAnswer((_) async => null);
+      when(mockAudioPlayer.play()).thenAnswer((_) async {});
       when(mockAudioPlayer.playerStateStream).thenAnswer(
         (_) => Stream.value(PlayerState(
           false,
@@ -395,7 +395,7 @@ void main() {
       await tts.playTextToSpeech("Second text.");
 
       // Allow some time for processing
-      await Future.delayed(Duration(milliseconds: 200));
+      await Future.delayed(const Duration(milliseconds: 200));
 
       // Verify that both texts were processed
       verify(mockHttpClient.post(

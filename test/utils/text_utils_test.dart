@@ -21,7 +21,7 @@ void main() {
 
     test('Should format time since last completed correctly', () {
       final now = DateTime.now();
-      final oneHourAgo = now.subtract(Duration(hours: 1));
+      final oneHourAgo = now.subtract(const Duration(hours: 1));
       final result = timeSinceLastCompleted(oneHourAgo);
 
       expect(result, '60 mins ago');

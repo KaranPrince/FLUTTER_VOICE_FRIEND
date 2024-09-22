@@ -15,12 +15,12 @@ void main() {
   group('SpeechService Tests', () {
     late SpeechService speechService;
     late MockDeepgram mockDeepgram;
-    late MockSpeechToText mockSpeechToText;
+    //late MockSpeechToText mockSpeechToText;
 
     setUp(() {
       speechService = SpeechService();
       mockDeepgram = MockDeepgram();
-      mockSpeechToText = MockSpeechToText();
+      //mockSpeechToText = MockSpeechToText();
 
       Config.deepgramApiKey = dotenv.env['DEEPGRAM_API_KEY'] ?? '';
     });
