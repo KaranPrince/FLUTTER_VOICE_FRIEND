@@ -23,7 +23,7 @@ class ConnectionService {
     startMonitoring();
   }
 
-  void forceUpdate() async {
+  Future<void> forceUpdate() async {
     connectionStatus = await InternetConnection().internetStatus;
     hasInternet = connectionStatus == InternetStatus.connected;
   }
