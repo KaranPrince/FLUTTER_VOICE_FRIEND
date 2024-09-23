@@ -227,7 +227,7 @@ class _SettingsPageState extends State<SettingsPage> {
       length: 1, // Two tabs: Settings and Memories
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Settings'),
+          title: const Text('Settings Page'),
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Settings', icon: Icon(Icons.settings)),
