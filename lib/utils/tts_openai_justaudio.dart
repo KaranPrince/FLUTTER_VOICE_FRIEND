@@ -14,7 +14,7 @@ import 'package:flutter_voice_friend/utils/tts_openai_interface.dart'
 
 class TextToSpeechOpenAI implements tts_interface.TextToSpeechOpenAI {
   // Constants
-  static const double _minIntensity = 0.05;
+  static const double minIntensity = 0.05;
   static const double _defaultSpeakingIntensity = 5.0;
   static const int _maxCharacters = 200;
   static const Duration _pauseBetweenSentences = Duration(milliseconds: 300);
@@ -37,7 +37,7 @@ class TextToSpeechOpenAI implements tts_interface.TextToSpeechOpenAI {
   bool _repeat = false;
 
   // Intensity metrics
-  double _currentIntensity = _minIntensity;
+  double _currentIntensity = minIntensity;
 
   // Voice settings
   String _voice;
@@ -140,7 +140,7 @@ class TextToSpeechOpenAI implements tts_interface.TextToSpeechOpenAI {
   @override
   double getCurrentIntensity() {
     // TODO: Replace with actual intensity calculation based on audio data
-    if (_currentIntensity == _minIntensity) return _minIntensity;
+    if (_currentIntensity == minIntensity) return minIntensity;
     _currentIntensity += 2.0 * (Random().nextDouble() - 0.5);
     _currentIntensity = _currentIntensity.clamp(2.0, 8.0);
     return _currentIntensity;
@@ -295,7 +295,7 @@ class TextToSpeechOpenAI implements tts_interface.TextToSpeechOpenAI {
           if (!isFirstSentence) {
             debugPrint(
                 'Pausing for ${_pauseBetweenSentences.inMilliseconds}ms between sentences');
-            _currentIntensity = _minIntensity;
+            _currentIntensity = minIntensity;
             await Future.delayed(_pauseBetweenSentences);
           }
 
@@ -321,7 +321,7 @@ class TextToSpeechOpenAI implements tts_interface.TextToSpeechOpenAI {
           await _audioPlayer.playerStateStream.firstWhere(
               (state) => state.processingState == ProcessingState.completed);
 
-          _currentIntensity = _minIntensity;
+          _currentIntensity = minIntensity;
 
           if (_autoPause) {
             _isPlayingAudio = false;
@@ -351,7 +351,7 @@ class TextToSpeechOpenAI implements tts_interface.TextToSpeechOpenAI {
         // Handle pause
         if (!_autoPause) {
           debugPrint("Pausing for ${_pauseBetweenPauses.inMilliseconds}ms");
-          _currentIntensity = _minIntensity;
+          _currentIntensity = minIntensity;
           await Future.delayed(_pauseBetweenPauses);
         }
       }

@@ -151,12 +151,13 @@ void main() {
     });
 
     test('lastAudioToPlay returns false when audio is buffered', () async {
+      final mockAudioData = Uint8List.fromList([0, 0, 0]);
       // Mock HTTP response
       when(mockHttpClient.post(
         any,
         headers: anyNamed('headers'),
         body: anyNamed('body'),
-      )).thenAnswer((_) async => http.Response.bytes(Uint8List(0), 200));
+      )).thenAnswer((_) async => http.Response.bytes(mockAudioData, 200));
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
@@ -168,21 +169,23 @@ void main() {
         )),
       );
 
-      await tts.playTextToSpeech("Hello, this is a test.");
+      tts.playTextToSpeech("Hello, this is a test.");
+      expect(tts.lastAudioToPlay(), true);
+      expect(tts.hasAudioToPlay(), true);
 
       // Allow some time for processing
-      await Future.delayed(const Duration(milliseconds: 100));
-
-      expect(tts.lastAudioToPlay(), false);
-    }, skip: 'TODO: Auto generated test - review failure case and fix test');
+      await Future.delayed(const Duration(milliseconds: 500));
+      expect(tts.hasAudioToPlay(), false);
+    });
 
     test('getSubtitles returns current subtitles', () async {
+      final mockAudioData = Uint8List.fromList([0, 0, 0]);
       // Mock HTTP response
       when(mockHttpClient.post(
         any,
         headers: anyNamed('headers'),
         body: anyNamed('body'),
-      )).thenAnswer((_) async => http.Response.bytes(Uint8List(0), 200));
+      )).thenAnswer((_) async => http.Response.bytes(mockAudioData, 200));
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
@@ -201,23 +204,24 @@ void main() {
 
       // Since _currentSubtitles is set if sentence length > 8
       expect(tts.getSubtitles(), "Hello, this is a test.");
-    }, skip: 'TODO: Auto generated test - review failure case and fix test');
+    });
 
     test('getCurrentIntensity returns clamped intensity', () {
       // Call getCurrentIntensity multiple times and verify clamping
       for (int i = 0; i < 10; i++) {
         double intensity = tts.getCurrentIntensity();
-        expect(intensity, inInclusiveRange(2.0, 8.0));
+        expect(intensity, TextToSpeechOpenAI.minIntensity);
       }
-    }, skip: 'TODO: Auto generated test - review failure case and fix test');
+    });
 
     test('playTextToSpeech adds text to queue and processes it', () async {
+      final mockAudioData = Uint8List.fromList([0, 0, 0]);
       // Mock the HTTP response
       when(mockHttpClient.post(
         any,
         headers: anyNamed('headers'),
         body: anyNamed('body'),
-      )).thenAnswer((_) async => http.Response.bytes(Uint8List(0), 200));
+      )).thenAnswer((_) async => http.Response.bytes(mockAudioData, 200));
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
@@ -252,15 +256,17 @@ void main() {
       // Verify that setAudioSource and play were called
       verify(mockAudioPlayer.setAudioSource(any)).called(1);
       verify(mockAudioPlayer.play()).called(1);
-    }, skip: 'TODO: Auto generated test - review failure case and fix test');
+    });
 
     test('stop stops the audio player and clears buffers', () async {
+      // Mock the HTTP response
+      final mockAudioData = Uint8List.fromList([0, 0, 0]);
       // Mock the HTTP response
       when(mockHttpClient.post(
         any,
         headers: anyNamed('headers'),
         body: anyNamed('body'),
-      )).thenAnswer((_) async => http.Response.bytes(Uint8List(0), 200));
+      )).thenAnswer((_) async => http.Response.bytes(mockAudioData, 200));
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
@@ -330,15 +336,17 @@ void main() {
       expect(tts.hasAudioToPlay(), false);
     });
 
-    test('handles very long text by splitting into segments', () async {
+    test('handles very long text not splitting', () async {
       String longText = 'A' * 1000; // 1000 characters
 
+      // Mock the HTTP response
+      final mockAudioData = Uint8List.fromList([0, 0, 0]);
       // Mock the HTTP response
       when(mockHttpClient.post(
         any,
         headers: anyNamed('headers'),
         body: anyNamed('body'),
-      )).thenAnswer((_) async => http.Response.bytes(Uint8List(0), 200));
+      )).thenAnswer((_) async => http.Response.bytes(mockAudioData, 200));
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
@@ -356,7 +364,7 @@ void main() {
       await Future.delayed(const Duration(milliseconds: 500));
 
       // Calculate expected number of segments
-      int expectedSegments = (longText.length / 200).ceil();
+      int expectedSegments = 1;
 
       // Verify the number of HTTP calls
       verify(mockHttpClient.post(
@@ -371,15 +379,59 @@ void main() {
       // Verify that setAudioSource and play were called expected number of times
       verify(mockAudioPlayer.setAudioSource(any)).called(expectedSegments);
       verify(mockAudioPlayer.play()).called(expectedSegments);
-    }, skip: 'TODO: Auto generated test - review failure case and fix test');
+    });
 
-    test('multiple playTextToSpeech calls queue texts properly', () async {
+    test('handles very long text splitting', () async {
+      // Mock the HTTP response
+      final mockAudioData = Uint8List.fromList([0, 0, 0]);
       // Mock the HTTP response
       when(mockHttpClient.post(
         any,
         headers: anyNamed('headers'),
         body: anyNamed('body'),
-      )).thenAnswer((_) async => http.Response.bytes(Uint8List(0), 200));
+      )).thenAnswer((_) async => http.Response.bytes(mockAudioData, 200));
+
+      // Mock AudioPlayer's setAudioSource and play
+      when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
+      when(mockAudioPlayer.play()).thenAnswer((_) async => {});
+      when(mockAudioPlayer.playerStateStream).thenAnswer(
+        (_) => Stream.value(PlayerState(
+          false,
+          ProcessingState.completed,
+        )),
+      );
+
+      for (int i = 0; i < 10; ++i) {
+        tts.playTextToSpeech('${'A' * 50}. ');
+      }
+
+      // Allow some time for processing
+      await Future.delayed(const Duration(milliseconds: 3000));
+
+      // Verify the number of HTTP calls
+      verify(mockHttpClient.post(
+        Uri.parse(Config.openaiTtsUrl),
+        headers: {
+          'Authorization': 'Bearer ${Config.openaiApiKey}',
+          'Content-Type': 'application/json',
+        },
+        body: anyNamed('body'),
+      )).called(5);
+
+      // Verify that setAudioSource and play were called expected number of times
+      verify(mockAudioPlayer.setAudioSource(any)).called(5);
+      verify(mockAudioPlayer.play()).called(5);
+    });
+
+    test('multiple playTextToSpeech calls queue texts properly', () async {
+      // Mock the HTTP response
+      final mockAudioData = Uint8List.fromList([0, 0, 0]);
+      // Mock the HTTP response
+      when(mockHttpClient.post(
+        any,
+        headers: anyNamed('headers'),
+        body: anyNamed('body'),
+      )).thenAnswer((_) async => http.Response.bytes(mockAudioData, 200));
 
       // Mock AudioPlayer's setAudioSource and play
       when(mockAudioPlayer.setAudioSource(any)).thenAnswer((_) async => null);
@@ -426,10 +478,12 @@ void main() {
         }),
       )).called(1);
 
+      await Future.delayed(const Duration(milliseconds: 500));
+
       // Verify that setAudioSource and play were called for both texts
       verify(mockAudioPlayer.setAudioSource(any)).called(2);
       verify(mockAudioPlayer.play()).called(2);
-    }, skip: 'TODO: Auto generated test - review failure case and fix test');
+    });
 
     test('getCurrentIntensity clamps correctly at lower bound', () {
       // Manually set _currentIntensity to near lower bound

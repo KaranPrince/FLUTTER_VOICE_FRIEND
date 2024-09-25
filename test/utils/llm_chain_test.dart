@@ -110,7 +110,7 @@ void main() {
       // Act
       library.updateMemory(input, output);
 
-      await Future.delayed(Duration(milliseconds: 200));
+      await Future.delayed(const Duration(milliseconds: 200));
       Map<String, dynamic> res = await library.memory.loadMemoryVariables();
 
       expect(res["chat_history"][0].contentAsString, equals("User input"));
@@ -167,7 +167,7 @@ void main() {
       library.updateMemory('', '');
 
       // Assert
-      await Future.delayed(Duration(milliseconds: 200));
+      await Future.delayed(const Duration(milliseconds: 200));
       Map<String, dynamic> res = await library.memory.loadMemoryVariables();
 
       expect(res["chat_history"][0].contentAsString, equals(""));
