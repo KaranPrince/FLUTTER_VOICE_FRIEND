@@ -22,7 +22,7 @@ import 'llm_chain_test.mocks.dart';
 void main() {
   dotenv.load();
   // Initialize mock objects
-  late ConversationBufferWindowMemory mockMemory;
+  late ConversationBufferWindowMemory memory;
   late MockChatOpenAI mockLLM;
   late MockConversationChain mockChain;
   late PromptTemplate mockPromptTemplate;
@@ -30,7 +30,7 @@ void main() {
   late PromptTemplate mockSessionSummaryTemplate;
 
   setUp(() {
-    mockMemory = ConversationBufferWindowMemory(
+    memory = ConversationBufferWindowMemory(
       k: 15,
       memoryKey: "chat_history",
       aiPrefix: "AI",
@@ -68,7 +68,7 @@ void main() {
       // Arrange & Act
       final library = LLMChainLibrary(
         initialTemplate,
-        memory: mockMemory,
+        memory: memory,
         llm: mockLLM,
         llmChain: mockChain,
         promptTemplate: mockPromptTemplate,
@@ -78,7 +78,7 @@ void main() {
 
       // Assert
       expect(library.template, equals(initialTemplate));
-      expect(library.memory, equals(mockMemory));
+      expect(library.memory, equals(memory));
       expect(library.llm, equals(mockLLM));
       expect(library.llmChain, equals(mockChain));
       expect(library.promptTemplate, equals(mockPromptTemplate));
@@ -101,7 +101,7 @@ void main() {
       // Assuming promptTemplate has a 'template' property
     });
 
-    test('updateMemory saves context correctly', () {
+    test('updateMemory saves context correctly', () async {
       // Arrange
       final library = LLMChainLibrary(initialTemplate);
       const input = "User input";
@@ -110,24 +110,28 @@ void main() {
       // Act
       library.updateMemory(input, output);
 
-      // Assert
-      verify(mockMemory.saveContext(
-        inputValues: {'input': input},
-        outputValues: {'output': output},
-      )).called(1);
-    }, skip: 'TODO: Auto generated test - review failure case and fix test');
+      await Future.delayed(Duration(milliseconds: 200));
+      Map<String, dynamic> res = await library.memory.loadMemoryVariables();
 
-    test('clearMemory clears the memory correctly', () {
+      expect(res["chat_history"][0].contentAsString, equals("User input"));
+      expect(res["chat_history"][1].contentAsString, equals("AI response"));
+    });
+
+    test('clearMemory clears the memory correctly', () async {
       // Arrange
       final library = LLMChainLibrary(initialTemplate);
+      const input = "User input";
+      const output = "AI response";
 
-      // Act
+      library.updateMemory(input, output);
+      await Future.delayed(const Duration(milliseconds: 100));
       library.clearMemory();
+      await Future.delayed(const Duration(milliseconds: 100));
+      Map<String, dynamic> res = await library.memory.loadMemoryVariables();
 
       // Assert
-      verify(mockMemory.chatHistory.clear()).called(1);
-      verify(mockMemory.clear()).called(1);
-    }, skip: 'TODO: Auto generated test - review failure case and fix test');
+      expect(res["chat_history"].length, equals(0));
+    });
   });
 
   group('LLMChainLibrary Edge Case Tests', () {
@@ -155,7 +159,7 @@ void main() {
       // Further assertions can be added to ensure no re-initialization errors
     });
 
-    test('updateMemory handles empty input and output gracefully', () {
+    test('updateMemory handles empty input and output gracefully', () async {
       // Arrange
       final library = LLMChainLibrary(template);
 
@@ -163,10 +167,11 @@ void main() {
       library.updateMemory('', '');
 
       // Assert
-      verify(mockMemory.saveContext(
-        inputValues: {'input': ''},
-        outputValues: {'output': ''},
-      )).called(1);
-    }, skip: 'TODO: Auto generated test - review failure case and fix test');
+      await Future.delayed(Duration(milliseconds: 200));
+      Map<String, dynamic> res = await library.memory.loadMemoryVariables();
+
+      expect(res["chat_history"][0].contentAsString, equals(""));
+      expect(res["chat_history"][1].contentAsString, equals(""));
+    });
   });
 }

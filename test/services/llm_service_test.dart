@@ -21,6 +21,16 @@ import 'llm_service_test.mocks.dart';
   MockSpec<SessionService>()
 ])
 void main() {
+  // Provide a dummy for ConversationBufferWindowMemory
+  // Provide a dummy for ConversationBufferWindowMemory
+  setUpAll(() {
+    provideDummy<ConversationBufferWindowMemory>(
+        ConversationBufferWindowMemory());
+    provideDummy<PromptTemplate>(const PromptTemplate(
+        inputVariables: const <String>{},
+        template: '')); // Use Set<String> here
+  });
+
   group('LLMService Tests', () {
     late LLMService llmService;
     late MockLLMChainLibrary mockLLMChain;
