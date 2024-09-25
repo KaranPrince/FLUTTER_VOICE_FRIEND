@@ -38,6 +38,10 @@ class AudioService {
       throw Exception("Unsupported Audio Backend");
     }
     initPlayer();
+    initStreams();
+  }
+
+  void initStreams() {
     _startIntensityTimer();
     _listenToTTSErrors();
   }
@@ -119,11 +123,11 @@ class AudioService {
     tts.stop();
   }
 
-  void dispose() {
-    _intensityController.close();
+  Future<void> dispose() async {
+    await _intensityController.close();
+    await _errorController.close();
     _intensityTimer?.cancel();
     tts.dispose();
-    _errorController.close();
   }
 
   bool isPlaying() {

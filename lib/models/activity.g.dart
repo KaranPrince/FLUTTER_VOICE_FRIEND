@@ -138,13 +138,13 @@ Activity _activityDeserialize(
     description: reader.readString(offsets[2]),
     displayOrder: reader.readLong(offsets[3]),
     duration: reader.readLong(offsets[4]),
+    id: id,
     imagePath: reader.readStringOrNull(offsets[5]) ?? '',
     isCompleted: reader.readBoolOrNull(offsets[6]) ?? false,
     lastCompleted: reader.readDateTimeOrNull(offsets[7]),
     name: reader.readString(offsets[8]),
     requiredLevel: reader.readLong(offsets[9]),
   );
-  object.id = id;
   return object;
 }
 

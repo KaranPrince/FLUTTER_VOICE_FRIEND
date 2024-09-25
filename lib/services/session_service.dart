@@ -32,10 +32,11 @@ class SessionService {
     Duration sessionDuration = sessionEndTime.difference(sessionStartTime);
     int durationInMinutes = sessionDuration.inMinutes;
 
-    final sessionCollection = isar.sessions;
-    final activityCollection = isar.activitys;
+    final IsarCollection<Session> sessionCollection = isar.sessions;
+    final IsarCollection<Activity> activityCollection = isar.activitys;
 
-    final currentActivityFromDb = await activityCollection.get(activity.id);
+    final Activity? currentActivityFromDb =
+        await activityCollection.get(activity.id);
 
     if (currentActivityFromDb == null) {
       throw Exception("Activity not found in the database");

@@ -11,7 +11,7 @@ enum ActivityId { introduction, dreamAnalyst }
 
 @Collection()
 class Activity {
-  Id id = Isar.autoIncrement; // Automatically incrementing ID in Isar
+  Id id; // Automatically incrementing ID in Isar
 
   @enumerated
   late ActivityId activityId;
@@ -48,6 +48,7 @@ class Activity {
     required this.displayOrder,
     required this.category,
     required this.duration,
+    this.id = Isar.autoIncrement,
     this.isCompleted = false,
     this.lastCompleted,
     this.imagePath = '',
