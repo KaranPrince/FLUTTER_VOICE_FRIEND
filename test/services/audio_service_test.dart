@@ -7,7 +7,6 @@ import 'package:flutter_voice_friend/utils/tts_openai_interface.dart';
 import 'package:flutter_voice_friend/utils/tts_openai_justaudio.dart'
     as tts_justaudio;
 import 'package:flutter_voice_friend/config.dart';
-import 'package:flutter_voice_friend/constants.dart';
 import 'dart:async';
 
 import 'audio_service_test.mocks.dart';

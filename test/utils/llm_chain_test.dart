@@ -8,7 +8,6 @@ import 'package:langchain_openai/langchain_openai.dart';
 import 'package:flutter_voice_friend/utils/llm_chain.dart';
 
 import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 
 import 'package:flutter_voice_friend/llm_templates/summarizers/example_summarizer_user_template.dart';
 import 'package:flutter_voice_friend/llm_templates/summarizers/example_summarizer_session.dart';
