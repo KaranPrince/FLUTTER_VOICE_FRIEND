@@ -5,6 +5,7 @@ class ConnectionService {
   InternetStatus? connectionStatus;
   bool hasInternet = true;
   StreamSubscription<InternetStatus>? _subscription;
+  final InternetConnection _internetConnection;
 
   final StreamController<InternetStatus> _connectionStatusController =
       StreamController.broadcast();
@@ -12,24 +13,26 @@ class ConnectionService {
   Stream<InternetStatus> get connectionStatusStream =>
       _connectionStatusController.stream;
 
-  ConnectionService() {
+  // Updated constructor with optional parameter
+  ConnectionService({InternetConnection? internetConnection})
+      : _internetConnection = internetConnection ?? InternetConnection() {
     initialize();
   }
 
   void initialize() async {
-    connectionStatus = await InternetConnection().internetStatus;
+    connectionStatus = await _internetConnection.internetStatus;
     hasInternet = connectionStatus == InternetStatus.connected;
     _connectionStatusController.add(connectionStatus!);
     startMonitoring();
   }
 
   Future<void> forceUpdate() async {
-    connectionStatus = await InternetConnection().internetStatus;
+    connectionStatus = await _internetConnection.internetStatus;
     hasInternet = connectionStatus == InternetStatus.connected;
   }
 
   void startMonitoring() {
-    _subscription = InternetConnection().onStatusChange.listen((status) {
+    _subscription = _internetConnection.onStatusChange.listen((status) {
       connectionStatus = status;
       hasInternet = connectionStatus == InternetStatus.connected;
       _connectionStatusController.add(status);

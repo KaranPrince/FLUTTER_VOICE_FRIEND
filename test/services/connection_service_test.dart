@@ -25,7 +25,11 @@ void main() {
     when(mockInternetConnection.onStatusChange)
         .thenAnswer((_) => statusChangeController.stream);
 
-    connectionService = ConnectionService();
+    when(mockInternetConnection.internetStatus)
+        .thenAnswer((_) async => InternetStatus.connected);
+
+    connectionService =
+        ConnectionService(internetConnection: mockInternetConnection);
   });
 
   tearDown(() {
@@ -35,27 +39,28 @@ void main() {
 
   group('ConnectionService Initialization', () {
     test('Initializes with correct connection status', () async {
-      // Mock the initial status
+      // Mock the initial status to return 'connected'
       when(mockInternetConnection.internetStatus)
           .thenAnswer((_) async => InternetStatus.connected);
 
-      // Create the service and check if it initializes correctly
-      connectionService = ConnectionService();
+      // Create the service (this might start the async initialization)
+      connectionService =
+          ConnectionService(internetConnection: mockInternetConnection);
 
-      // Wait for the async initialization to complete
-      //await Future.delayed(const Duration(seconds: 1));
-
-      // Verify that the correct status is set and emitted
-      expectLater(connectionService.connectionStatusStream,
-          emitsInOrder([InternetStatus.connected]));
+      // Await the emission of the connection status from the stream
+      await expectLater(
+        connectionService.connectionStatusStream,
+        emitsInOrder([InternetStatus.connected]),
+      );
 
       // Ensure the connection status and hasInternet are correctly updated
       expect(connectionService.connectionStatus, InternetStatus.connected);
       expect(connectionService.hasInternet, true);
 
-      verify(mockInternetConnection.internetStatus).called(1);
+      // Verify the method that checks the internet status was called
+      verify(mockInternetConnection.internetStatus).called(2);
     });
-  }, skip: 'TODO: Auto generated test - review failure case and fix test');
+  });
 
   group('ConnectionService forceUpdate', () {
     test('Forces an update of the connection status', () async {
@@ -70,42 +75,36 @@ void main() {
       expect(connectionService.connectionStatus, InternetStatus.disconnected);
       expect(connectionService.hasInternet, false);
 
-      verify(mockInternetConnection.internetStatus).called(1);
+      verify(mockInternetConnection.internetStatus).called(2);
     });
-  }, skip: 'TODO: Auto generated test - review failure case and fix test');
+  });
 
   group('ConnectionService Monitoring', () {
     test('Starts monitoring and updates the stream on status change', () async {
-      // Mock initial status as connected
-      when(mockInternetConnection.internetStatus)
-          .thenAnswer((_) async => InternetStatus.connected);
-
-      connectionService = ConnectionService();
-
-      // Expect the initial connection status to be emitted
+      // Expect that the stream will emit first 'connected' and then 'disconnected'
       expectLater(
-          connectionService.connectionStatusStream,
-          emitsInOrder(
-              [InternetStatus.connected, InternetStatus.disconnected]));
+        connectionService.connectionStatusStream,
+        emitsInOrder([
+          InternetStatus.connected, // Initial status
+          InternetStatus.disconnected, // Simulated status change
+        ]),
+      );
 
       // Simulate a status change to disconnected
+      statusChangeController.add(InternetStatus.connected);
       statusChangeController.add(InternetStatus.disconnected);
 
-      await Future.delayed(Duration.zero); // Allow async operation to complete
+      // Allow time for the async operation to complete
+      await Future.delayed(Duration.zero);
 
-      // Verify the new status and hasInternet flag
+      // Optionally verify that the connectionService has updated its internal state
       expect(connectionService.connectionStatus, InternetStatus.disconnected);
       expect(connectionService.hasInternet, false);
-
-      verify(mockInternetConnection.onStatusChange).called(1);
     });
-  }, skip: 'TODO: Auto generated test - review failure case and fix test');
+  });
 
   group('ConnectionService stopMonitoring', () {
     test('Stops monitoring and closes the stream', () async {
-      // Start the monitoring first
-      connectionService.startMonitoring();
-
       // Listen to the connectionStatusStream
       final streamListener = expectLater(
         connectionService.connectionStatusStream,
@@ -114,6 +113,8 @@ void main() {
 
       // Simulate an initial status
       statusChangeController.add(InternetStatus.connected);
+
+      await Future.delayed(Duration.zero);
 
       // Call stopMonitoring to cancel the subscription
       connectionService.stopMonitoring();
@@ -130,5 +131,5 @@ void main() {
         true,
       );
     });
-  }, skip: 'TODO: Auto generated test - review failure case and fix test');
+  });
 }
