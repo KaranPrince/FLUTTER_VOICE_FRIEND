@@ -6,25 +6,28 @@ void main() {
     group('Creation Tests', () {
       test('Should create an Activity instance with all required values', () {
         final activity = Activity(
+          id: 1234,
           activityId: ActivityId.introduction,
           name: 'Introduction',
           description: 'Introduction activity',
-          requiredLevel: 0,
-          displayOrder: 0,
+          requiredLevel: 3,
+          displayOrder: 10,
           category: ActivityCategory.dreamActivities,
           duration: 5,
           imagePath: 'assets/activities/default_image.webp',
+          isCompleted: true,
         );
 
+        //expect(activity.id, 1234);
         expect(activity.activityId, ActivityId.introduction);
         expect(activity.name, 'Introduction');
         expect(activity.description, 'Introduction activity');
-        expect(activity.requiredLevel, 0);
-        expect(activity.displayOrder, 0);
+        expect(activity.requiredLevel, 3);
+        expect(activity.displayOrder, 10);
         expect(activity.category, ActivityCategory.dreamActivities);
         expect(activity.duration, 5);
         expect(activity.imagePath, 'assets/activities/default_image.webp');
-        expect(activity.isCompleted, false);
+        expect(activity.isCompleted, true);
         expect(activity.lastCompleted, null);
       });
 
