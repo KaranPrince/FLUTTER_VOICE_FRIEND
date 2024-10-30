@@ -101,11 +101,16 @@ As of the current version, there are several features and enhancements that are 
    flutter pub get
    ```
 
-3. **Add API Keys:**
+3. **Generate code with build_runner (required for Isar):**
+   ```bash
+   dart run build_runner build
+   ```
+
+4. **Add API Keys:**
    - Rename `.env.example` to `.env`.
    - Add your OpenAI and Deepgram API keys to the `.env` file.
 
-4. **Run the app:**
+5. **Run the app:**
    ```bash
    flutter run
    ```
