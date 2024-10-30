@@ -101,16 +101,19 @@ As of the current version, there are several features and enhancements that are 
    flutter pub get
    ```
 
-3. **Generate code with build_runner (required for Isar):**
+3. **Generate Isar code:**
+
+   - Run the following command to generate code for Isar (an embedded NoSQL database for Flutter):
+
    ```bash
    dart run build_runner build
    ```
 
-4. **Add API Keys:**
+5. **Add API Keys:**
    - Rename `.env.example` to `.env`.
    - Add your OpenAI and Deepgram API keys to the `.env` file.
 
-5. **Run the app:**
+6. **Run the app:**
    ```bash
    flutter run
    ```
