@@ -102,7 +102,6 @@ As of the current version, there are several features and enhancements that are 
    ```
 
 3. **Generate Isar code:**
-
    - Run the following command to generate code for Isar (an embedded NoSQL database for Flutter):
 
    ```bash
@@ -117,6 +116,15 @@ As of the current version, there are several features and enhancements that are 
    ```bash
    flutter run
    ```
+
+7. **Configure Settings:**
+   - You can access the app's settings by tapping the gear icon in the top right corner.
+
+8. **Enjoy!**
+   - You can try the app with two demo activities: 'Introduction' and 'Whisper the Dream Analyst'.
+   - If you’re testing on an iOS simulator, make sure to change the Speech-To-Text (STT) method to use 'Deepgram' instead of 'On Device', as the on-device TTS may not function properly on iOS simulators.
+   - This setting change requires a valid Deepgram API key. Visit Deepgram's website to obtain a key.
+   - You can adjust these settings directly within the app by tapping the gear icon in the top-right corner.
 
 ### Configuration
 
