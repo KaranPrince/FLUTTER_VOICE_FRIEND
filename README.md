@@ -129,5 +129,5 @@ This project is licensed under the **Creative Commons Attribution-NonCommercial-
 
 ## Contact
 
-If you have any questions or feedback, feel free to open an issue or contact us at [jbpassot@gmail.com].
+If you have any questions or feedback, feel free to open an issue or contact us at [jbpassot+fluttervoice@gmail.com].
 
