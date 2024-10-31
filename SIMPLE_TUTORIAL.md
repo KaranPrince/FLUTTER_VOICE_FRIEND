@@ -72,7 +72,7 @@ You'll need to:
          llmChain.setTemplate(templateDreamAnalyst);
          break;
        case ActivityId.myNewActivity: // New case for your activity
-         llmChain.setTemplate(templateMyNewActivity); // Set to your template
+         llmChain.setTemplate(templateMindfulCompanion); // Set to your template
          break;
        default:
          // Handle other cases
@@ -90,7 +90,7 @@ You'll need to:
    - Here’s a sample template structure based on an assistant guide. Customize it to match your new activity’s purpose.
 
      ```dart
-     String templateMyNewActivity = """
+     String templateMindfulCompanion = """
      {language}
 
      You are Whisper, the user’s assistant for this activity. Guide the user through structured, engaging steps.
