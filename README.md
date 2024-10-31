@@ -101,14 +101,30 @@ As of the current version, there are several features and enhancements that are 
    flutter pub get
    ```
 
-3. **Add API Keys:**
+3. **Generate Isar code:**
+   - Run the following command to generate code for Isar (an embedded NoSQL database for Flutter):
+
+   ```bash
+   dart run build_runner build
+   ```
+
+5. **Add API Keys:**
    - Rename `.env.example` to `.env`.
    - Add your OpenAI and Deepgram API keys to the `.env` file.
 
-4. **Run the app:**
+6. **Run the app:**
    ```bash
    flutter run
    ```
+
+7. **Configure Settings:**
+   - You can access the app's settings by tapping the gear icon in the top right corner.
+
+8. **Enjoy!**
+   - You can try the app with two demo activities: 'Introduction' and 'Whisper the Dream Analyst'.
+   - If you’re testing on an iOS simulator, make sure to change the Speech-To-Text (STT) method to use 'Deepgram' instead of 'On Device', as the on-device TTS may not function properly on iOS simulators.
+   - This setting change requires a valid Deepgram API key. Visit Deepgram's website to obtain a key.
+   - You can adjust these settings directly within the app by tapping the gear icon in the top-right corner.
 
 ### Configuration
 
@@ -118,6 +134,10 @@ The app uses various external services like OpenAI for text generation and Deepg
 OPENAI_API_KEY=your_openai_api_key
 DEEPGRAM_API_KEY=your_deepgram_api_key
 ```
+
+### Tutorial
+For a quick start guide on creating a new activity, please see the [SIMPLE_TUTORIAL.md](SIMPLE_TUTORIAL.md) file.
+
 
 ## Contribution
 
