@@ -135,6 +135,10 @@ OPENAI_API_KEY=your_openai_api_key
 DEEPGRAM_API_KEY=your_deepgram_api_key
 ```
 
+### Tutorial
+For a quick start guide on creating a new activity, please see the [SIMPLE_TUTORIAL.md](SIMPLE_TUTORIAL.md) file.
+
+
 ## Contribution
 
 We welcome contributions! Please check the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to contribute.
