@@ -7,7 +7,6 @@ import 'package:flutter_voice_friend/services/animation_controller_service.dart'
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'bottom_icons_when_listening_test.mocks.dart';
-import 'package:flutter/animation.dart';
 
 class FakeAnimationController extends AnimationController {
   FakeAnimationController() : super(vsync: const TestVSync());

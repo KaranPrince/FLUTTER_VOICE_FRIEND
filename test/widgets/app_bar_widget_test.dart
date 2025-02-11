@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_voice_friend/widgets/app_bar_widget.dart';
 import 'package:flutter_voice_friend/models/activity.dart';
-import 'package:flutter_voice_friend/screens/main_menu.dart';
-import 'package:flutter_voice_friend/screens/settings_page.dart';
 import 'package:flutter_voice_friend/config.dart';
 import 'package:isar/isar.dart';
 import 'package:mockito/mockito.dart';

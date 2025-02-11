@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_voice_friend/widgets/common/loading_widget.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 void main() {
   testWidgets('LoadingWidget displays loading animation and text',

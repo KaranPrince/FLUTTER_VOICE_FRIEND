@@ -15,7 +15,7 @@ void main() {
             onPressed: () async {
               await showIntroductionActivityCompletionDialog(context);
             },
-            child: Text('Show Dialog'),
+            child: const Text('Show Dialog'),
           ),
         ),
       ),
@@ -50,7 +50,7 @@ void main() {
             onPressed: () async {
               result = await showActivityCompletionDialog(context);
             },
-            child: Text('Show Dialog'),
+            child: const Text('Show Dialog'),
           ),
         ),
       ),
