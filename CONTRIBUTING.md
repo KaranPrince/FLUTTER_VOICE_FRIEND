@@ -11,7 +11,7 @@ We are always looking for new ideas! If you have a suggestion, please open an is
 
 2. **Clone Your Fork:**
    ```bash
-   git clone https://github.com/jbpassot/flutter_voice_friend.git
+   git clone https://github.com/KaranPrince/FLUTTER_VOICE_FRIEND
    ```
 
 3. **Create a New Branch:**
