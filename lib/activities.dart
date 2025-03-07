@@ -10,24 +10,76 @@ Activity introductionActivity = Activity(
   category: ActivityCategory.dreamActivities, // Category for the activity
   displayOrder: 0, // Display order
   duration: 5, // Set a duration for the activity (e.g., 5 minutes)
-  imagePath: 'assets/activities/default_image.webp', // Direct image path assignment
+  imagePath:
+      'assets/activities/default_image.webp', // Direct image path assignment
 );
 
-// ✅ NEW ACTIVITY: Define Your Custom Activity
-Activity myNewActivity = Activity(
-  activityId: ActivityId.myNewActivity, // New activity ID
-  name: "My New Activity", // Name for display
-  description: 'A new interactive activity to guide the user', // Brief description
-  requiredLevel: 0, // Minimum level required (0 means no requirement)
-  category: ActivityCategory.dreamActivities, // Choose a suitable category
-  displayOrder: 2, // Order in which it appears
-  duration: 7, // Duration in minutes
-  imagePath: 'assets/activities/my_new_activity_image.webp', // Image asset path
-);
+// Sync activities with the database
+Future<void> syncActivities(Isar isar) async {
+  // Load existing activities from Isar
+  final existingActivities = await isar.activitys.where().findAll();
 
-// ✅ UPDATE `initializeActivities()` TO INCLUDE NEW ACTIVITY
+  // Hardcoded list of activities
+  List<Activity> hardcodedActivities = initializeActivities();
+
+  // Convert existing activities into a map for easy comparison by activityId
+  Map<ActivityId, Activity> existingActivitiesMap = {
+    for (var activity in existingActivities) activity.activityId: activity
+  };
+
+  // Start an Isar transaction to update the database
+  await isar.writeTxn(() async {
+    for (var hardcodedActivity in hardcodedActivities) {
+      if (existingActivitiesMap.containsKey(hardcodedActivity.activityId)) {
+        final storedActivity =
+            existingActivitiesMap[hardcodedActivity.activityId]!;
+
+        // Check if the activity has changed, and update it if necessary
+        if (_isActivityModified(storedActivity, hardcodedActivity)) {
+          storedActivity
+            ..name = hardcodedActivity.name
+            ..description = hardcodedActivity.description
+            ..requiredLevel = hardcodedActivity.requiredLevel
+            ..category = hardcodedActivity.category
+            ..displayOrder = hardcodedActivity.displayOrder
+            ..duration = hardcodedActivity.duration
+            ..imagePath = hardcodedActivity.imagePath;
+
+          await isar.activitys.put(storedActivity); // Update existing activity
+          debugPrint('Updated activity: ${storedActivity.name}');
+        }
+
+        // Remove the existing activity from the map, so it's not reprocessed
+        existingActivitiesMap.remove(hardcodedActivity.activityId);
+      } else {
+        // Add new activity to the database
+        await isar.activitys.put(hardcodedActivity);
+        debugPrint('Added new activity: ${hardcodedActivity.name}');
+      }
+    }
+
+    // Optionally: Remove old activities that are no longer in the hardcoded list
+    for (var remainingStoredActivity in existingActivitiesMap.values) {
+      await isar.activitys.delete(remainingStoredActivity.id);
+      debugPrint('Removed outdated activity: ${remainingStoredActivity.name}');
+    }
+  });
+}
+
+bool _isActivityModified(Activity storedActivity, Activity hardcodedActivity) {
+  return storedActivity.name != hardcodedActivity.name ||
+      storedActivity.description != hardcodedActivity.description ||
+      storedActivity.requiredLevel != hardcodedActivity.requiredLevel ||
+      storedActivity.category != hardcodedActivity.category ||
+      storedActivity.displayOrder != hardcodedActivity.displayOrder ||
+      storedActivity.duration != hardcodedActivity.duration ||
+      storedActivity.imagePath != hardcodedActivity.imagePath;
+}
+
+// Function to initialize activities with proper categories, levels, and orders
 List<Activity> initializeActivities() {
   return [
+    // Kids Activities
     introductionActivity,
     Activity(
       activityId: ActivityId.dreamAnalyst,
@@ -39,22 +91,5 @@ List<Activity> initializeActivities() {
       duration: 10,
       imagePath: 'assets/activities/example_image_1.webp',
     ),
-    myNewActivity, // ✅ ADD YOUR NEW ACTIVITY HERE
   ];
 }
-
-// ✅ SYNC ACTIVITIES WITH DATABASE
-Future<void> syncActivities(Isar isar) async {
-  final existingActivities = await isar.activitys.where().findAll();
-  List<Activity> hardcodedActivities = initializeActivities();
-
-  Map<ActivityId, Activity> existingActivitiesMap = {
-    for (var activity in existingActivities) activity.activityId: activity
-  };
-
-  await isar.writeTxn(() async {
-    for (var hardcodedActivity in hardcodedActivities) {
-      if (existingActivitiesMap.containsKey(hardcodedActivity.activityId)) {
-        final storedActivity = existingActivitiesMap[hardcodedActivity.activityId]!;
-
-        if (_isActivityModi
