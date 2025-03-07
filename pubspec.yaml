@@ -64,6 +64,7 @@ dependencies:
   uuid: ^4.5.0
   wakelock_plus: ^1.2.7
   web_socket_channel: ^3.0.0
+  flutter_tts: ^4.2.2 # Use the latest version
 
 dev_dependencies:
   build_runner: ^2.4.12

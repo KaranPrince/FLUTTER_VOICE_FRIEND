@@ -5,11 +5,14 @@
 *.pyc
 *.swp
 .DS_Store
+**/.DS_Store  # Exclude .DS_Store files in any directory
 .atom/
 .buildlog/
 .history
 .svn/
 migrate_working_dir/
+**/.metadata  # Exclude .metadata files created by Dart
+**/Thumbs.db  # Exclude Thumbs.db files created by Windows
 
 # IntelliJ related
 *.iml
@@ -17,10 +20,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# VS Code related
+#.vscode/  # Uncomment if you're not using VS Code
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -38,7 +39,7 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
+# Android Studio build artifacts
 /android/app/debug
 /android/app/profile
 /android/app/release
